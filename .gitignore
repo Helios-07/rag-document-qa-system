@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+.venv/
+.env
+
+# Data
+data/raw/
+data/processed/
+
+# Artifacts
+artifacts/
+
+# ML models / embeddings
+*.bin
+*.pt
+*.pkl
+ 
+# Logs
+logs/
