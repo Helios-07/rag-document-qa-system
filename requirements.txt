@@ -1,0 +1,8 @@
+PyPDF2
+fastapi
+uvicorn
+faiss-cpu
+sentence-transformers
+pyyaml
+mlflow
+boto3
