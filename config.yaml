@@ -1,0 +1,6 @@
+chunking:
+  chunk_size: 500
+  overlap: 100
+
+data:
+  input_path: "data/raw/"
