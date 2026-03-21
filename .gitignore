@@ -1,22 +1,70 @@
+# =========================
 # Python
+# =========================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# Virtual env
+# =========================
+# Virtual Environment
+# =========================
 .venv/
+venv/
 .env
 
-# Data
+# =========================
+# Data (never commit raw data)
+# =========================
 data/raw/
 data/processed/
 
-# Artifacts
+# =========================
+# Artifacts (FAISS, chunks, etc.)
+# =========================
 artifacts/
+*.faiss
+*.index
+*.pkl
 
-# ML models / embeddings
+# =========================
+# ML Models / Embeddings
+# =========================
 *.bin
 *.pt
-*.pkl
- 
+
+# =========================
 # Logs
+# =========================
 logs/
+*.log
+
+# =========================
+# Jupyter / Notebooks (optional)
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Build / Cache
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# Misc
+# =========================
+.python-version
+uv.lock

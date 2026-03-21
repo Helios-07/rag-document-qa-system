@@ -1,11 +1,14 @@
 import os
 import yaml
 import sys
+import pickle
 
 from src.ingestion.loader import load_document
 from src.ingestion.chunker import chunk_text
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
+from src.embedding.embedding import EmbeddingModel
+from src.vector_store.faiss_store import FAISSVectorStore
 
 logger = get_logger(__name__)
 
@@ -68,7 +71,36 @@ def main():
 
         print(f"Total chunks from all files: {len(all_chunks)}")
 
-        print("\nSample chunk:\n", all_chunks[0][:300])
+        embedding_model=EmbeddingModel()
+        embeddings=embedding_model.encode(all_chunks)
+
+        logger.info(f"Embeddings shape: {embeddings.shape}")
+
+
+        dimension=embeddings.shape[1]
+        vector_store=FAISSVectorStore(dimension)
+        vector_store.add_embeddings(embeddings)
+
+        vector_store.save()
+
+        os.makedirs("artifacts", exist_ok=True)
+
+        with open("artifacts/chunks.pkl", 'wb') as f:
+            pickle.dump(all_chunks, f)
+        logger.info("Chunks saved successfully")
+
+        query="What do you mean by LR parsing?"
+
+        query_embedding=embedding_model.encode([query])[0]
+
+        distances,indices=vector_store.search(query_embedding, top_k=3)
+
+        print("\n Query:", query)
+        print("\nTop Results:\n")
+
+        for i in indices[0]:
+            print(all_chunks[i][:300])
+            print("\n" + "-" * 50 + "\n")
 
     except Exception as e:
         logger.error("Pipeline execution failed")
