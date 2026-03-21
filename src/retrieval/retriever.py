@@ -1,7 +1,7 @@
 import pickle
 from src.embedding.embedding import EmbeddingModel
 from src.vector_store.faiss_store import FAISSVectorStore
-from utils.logger import get_logger
+from src.utils.logger import get_logger
 from src.utils.exception import CustomException
 import sys
 
@@ -12,16 +12,18 @@ class Retriever:
         try:
             logger.info("Initializing Retriever")
 
-            self.embeddng_model=EmbeddingModel()
+            self.embedding_model=EmbeddingModel()
 
             with open("artifacts/chunks.pkl", 'rb') as f:
                 self.chunks=pickle.load(f)
 
             logger.info(f"Loaded {len(self.chunks)} chunks")
 
-            dimension=384
-            self.vector_store=FAISSVectorStore(dimension)
+            self.vector_store=FAISSVectorStore(dimension=None)
             self.vector_store.load()
+
+            dimension=self.vector_store.index.d
+            logger.info(f"Detected FAISS dimension: {dimension}")
 
         except Exception as e:
             logger.error("Error initializing retriever")

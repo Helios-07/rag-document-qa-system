@@ -8,10 +8,13 @@ import os
 logger=get_logger(__name__)
 
 class FAISSVectorStore:
-    def __init__(self,dimension):
+    def __init__(self,dimension=None):
         try:
-            logger.info(f"Initializing FAISS index with dimension: {dimension}")
-            self.index=faiss.IndexFlatL2(dimension)
+            if dimension:
+                logger.info(f"Initializing FAISS index with dimension: {dimension}")
+                self.index=faiss.IndexFlatL2(dimension)
+            else:
+                self.index=None
         
         except Exception as e:
             logger.error("Error initializing FAISS")

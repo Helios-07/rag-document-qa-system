@@ -4,3 +4,10 @@ chunking:
 
 data:
   input_path: "data/raw/"
+
+embedding:
+  model_name: all-MiniLM-L6-v2
+
+generation:
+  model_name: google/flan-t5-base
+  max_length: 200
