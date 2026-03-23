@@ -24,7 +24,7 @@ class Generator:
             raise CustomException(e,sys)
         
 
-    def generator(self,query,context):
+    def generate(self,query,context):
         try:
             logger.info("Generating answer")
 
