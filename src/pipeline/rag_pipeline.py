@@ -11,7 +11,7 @@ def load_config(path="config.yaml"):
     with open(path, 'r') as f:
         return yaml.safe_load(f)
 
-class RAGPipeine:
+class RAGPipeline:
     def __init__(self):
         try:
             logger.info("Initializing RAG Pipeline")
@@ -22,7 +22,7 @@ class RAGPipeine:
 
             gen_config=config['generation']
             self.generator=Generator(
-                model_name=gen_config['moel_name'],
+                model_name=gen_config['model_name'],
                 max_length=gen_config.get('max_length', 200)
             )
 
@@ -36,7 +36,13 @@ class RAGPipeine:
             logger.info(f"Running RAG pipeline for query: {query}")
 
             retrieved_chunks=self.retriever.retrieve(query)
-            context="\n\n".join(retrieved_chunks)
+            retrieved_chunks = [chunk for chunk in retrieved_chunks if len(chunk) > 50]
+
+            clean_chunks=[chunk.replace("\n", " ") for chunk in retrieved_chunks if len(chunk.strip())>50]
+            logger.info(f"Retrieved {len(clean_chunks)} valid chunks")
+            
+            context = "\n\n".join(chunk[:400] for chunk in clean_chunks[:2])
+            logger.info(f"Context length: {len(context)}")
 
             ans=self.generator.generate(query,context)
 

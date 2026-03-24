@@ -1,4 +1,4 @@
-from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
 import sys
@@ -10,9 +10,13 @@ class Generator:
         try:
             logger.info(f"Loading LLM: {model_name}")
 
+            self.tokenizer=AutoTokenizer.from_pretrained(model_name)
+            self.model=AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
             self.generator=pipeline(
                 "text2text-generation",
-                model=model_name
+                model=self.model,
+                tokenizer=self.tokenizer
             )
 
             self.max_length=max_length
@@ -29,20 +33,18 @@ class Generator:
             logger.info("Generating answer")
 
             prompt = f"""
-Act as an expert analyst. Examine the context below to answer the user's query.
+You are a helpful assistant.
 
-### Context:
+Answer the question based ONLY on the context below.
+Explain in simple terms.
+
+Context:
 {context}
 
-### Task:
-1. First, identify the specific parts of the context relevant to the question.
-2. Second, synthesize those parts into a clear, direct answer.
-3. If the context contradicts itself or is missing info, point that out.
-
-### Question:
+Question:
 {query}
 
-### Detailed Answer:
+Answer:
 """
             response=self.generator(
                 prompt,

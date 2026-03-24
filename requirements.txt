@@ -6,3 +6,4 @@ sentence-transformers
 pyyaml
 mlflow
 boto3
+nltk

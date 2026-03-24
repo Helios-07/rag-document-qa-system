@@ -1,4 +1,4 @@
-from src.pipeline.rag_pipeline import RAGPipeine
+from src.pipeline.rag_pipeline import RAGPipeline
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
 import sys
@@ -9,7 +9,7 @@ def main():
     try:
         logger.info("Starting RAG Application")
 
-        pipeline=RAGPipeine()
+        pipeline=RAGPipeline()
 
         while True:
             query=input("\nEnter your question (or type 'exit'): ")

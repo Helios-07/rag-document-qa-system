@@ -71,7 +71,8 @@ def main():
 
         print(f"Total chunks from all files: {len(all_chunks)}")
 
-        embedding_model=EmbeddingModel()
+        model_name=config['embedding']['model_name']
+        embedding_model=EmbeddingModel(model_name=model_name)
         embeddings=embedding_model.encode(all_chunks)
 
         logger.info(f"Embeddings shape: {embeddings.shape}")

@@ -4,15 +4,30 @@ from src.vector_store.faiss_store import FAISSVectorStore
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
 import sys
+import yaml
 
 logger=get_logger(__name__)
 
+def load_config(path="config.yaml"):
+    try:
+        with open(path, "r") as f:
+            config = yaml.safe_load(f)
+        logger.info("Config file loaded successfully")
+        return config
+
+    except Exception as e:
+        logger.error("Error loading config file")
+        raise CustomException(e, sys)
 class Retriever:
     def __init__(self):
         try:
             logger.info("Initializing Retriever")
 
-            self.embedding_model=EmbeddingModel()
+            config = load_config()
+
+            model_name=config['embedding']['model_name']
+            self.embedding_model=EmbeddingModel(model_name=model_name)
+            
 
             with open("artifacts/chunks.pkl", 'rb') as f:
                 self.chunks=pickle.load(f)
@@ -30,7 +45,7 @@ class Retriever:
             raise CustomException(e,sys)
         
     
-    def retrieve(self,query, top_k=3):
+    def retrieve(self,query, top_k=2):
         try:
             logger.info(f"Retrieving for query: {query}")
 
