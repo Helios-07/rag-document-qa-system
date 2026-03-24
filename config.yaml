@@ -10,5 +10,5 @@ embedding:
 
 
 generation:
-  model_name: google/flan-t5-large
-  max_length: 250
+  model_name: google/flan-t5-base
+  max_length: 200

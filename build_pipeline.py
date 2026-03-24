@@ -1,3 +1,4 @@
+from email.mime import text
 import os
 import yaml
 import sys
@@ -53,11 +54,16 @@ def main():
 
                 text = load_document(file_path)
 
+                print(f"[DEBUG] File: {file}")
+                print(f"[DEBUG] Text length: {len(text)}")
+
                 if not text.strip():
                     logger.warning(f"Empty content in file: {file}")
                     continue
 
                 chunks = chunk_text(text, chunk_size, overlap)
+
+                print(f"[DEBUG] Chunks created: {len(chunks)}")
 
                 all_chunks.extend(chunks)
 
@@ -70,6 +76,11 @@ def main():
         logger.info(f"Total chunks from all files: {len(all_chunks)}")
 
         print(f"Total chunks from all files: {len(all_chunks)}")
+        
+        if not all_chunks:
+            logger.error("No chunks were created. Exiting pipeline")
+            raise ValueError("Chunking failed - no data to process")
+
 
         model_name=config['embedding']['model_name']
         embedding_model=EmbeddingModel(model_name=model_name)
