@@ -1,6 +1,6 @@
 chunking:
-  chunk_size: 500
-  overlap: 100
+  chunk_size: 150
+  overlap: 30
 
 data:
   input_path: "data/raw/"
@@ -10,5 +10,9 @@ embedding:
 
 
 generation:
-  model_name: google/flan-t5-base
+  model_name: google/flan-t5-large
   max_length: 200
+
+retrieval:
+  top_k: 3
+  reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2

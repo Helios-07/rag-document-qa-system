@@ -33,10 +33,14 @@ class Generator:
             logger.info("Generating answer")
 
             prompt = f"""
-You are a helpful assistant.
+You are a strict question-answering system.
 
-Answer the question based ONLY on the context below.
-Explain in simple terms.
+Rules:
+- Answer ONLY using the given context
+- Give a COMPLETE and CORRECT answer
+- Do NOT copy random sentences
+- If definition is asked → give proper definition
+- Keep answer clear and meaningful (3–5 lines)
 
 Context:
 {context}
@@ -46,6 +50,7 @@ Question:
 
 Answer:
 """
+            prompt = prompt[:1500]
             response=self.generator(
                 prompt,
                 max_length=self.max_length,

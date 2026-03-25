@@ -35,13 +35,22 @@ class RAGPipeline:
         try:
             logger.info(f"Running RAG pipeline for query: {query}")
 
-            retrieved_chunks=self.retriever.retrieve(query, top_k=2)
+            retrieved_chunks=self.retriever.retrieve(query, top_k=3)
             retrieved_chunks = [chunk for chunk in retrieved_chunks if len(chunk) > 50]
 
-            clean_chunks=[chunk.replace("\n", " ") for chunk in retrieved_chunks if len(chunk.strip())>50]
+            clean_chunks=[
+                " ".join(chunk.replace("\n", " ").split())[:400]
+                for chunk in retrieved_chunks
+                if len(chunk.strip())>50
+            ]
             logger.info(f"Retrieved {len(clean_chunks)} valid chunks")
 
-            context = "\n\n".join(chunk[:400] for chunk in clean_chunks[:2])
+            context = ""
+            for chunk in clean_chunks[:2]:
+                if len(context.split()) < 300:
+                    context += chunk + "\n\n"
+                else:
+                    break
             logger.info(f"Context length: {len(context)}")
 
             ans=self.generator.generate(query,context)
