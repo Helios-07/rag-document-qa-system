@@ -2,8 +2,10 @@ PyPDF2
 fastapi
 uvicorn
 faiss-cpu
-sentence-transformers
+entence-transformers==2.6.1
 pyyaml
 mlflow
 boto3
 nltk
+transformers==4.40.0
+openai

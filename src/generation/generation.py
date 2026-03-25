@@ -1,46 +1,65 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from openai import OpenAI
+from dotenv import load_dotenv
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
 import sys
+import yaml
+import os
 
 logger=get_logger(__name__)
 
+load_dotenv(override=True)
+
+def load_config(path="config.yaml"):
+    with open(path, 'r') as f:
+        return yaml.safe_load(f)
+    
 class Generator:
-    def __init__(self, model_name, max_length=200):
+    def __init__(self):
         try:
-            logger.info(f"Loading LLM: {model_name}")
+            config=load_config()
 
-            self.tokenizer=AutoTokenizer.from_pretrained(model_name)
-            self.model=AutoModelForSeq2SeqLM.from_pretrained(model_name)
+            gen_config=config['generation']
 
-            self.generator=pipeline(
-                "text2text-generation",
-                model=self.model,
-                tokenizer=self.tokenizer
-            )
+            self.model=gen_config['model_name']
+            self.temp=gen_config['temperature']
 
-            self.max_length=max_length
+            logger.info(f"Loading OpenAI model: {self.model}")
 
-            logger.info("LLM loaded successfully")
+            if not os.getenv("OPENAI_API_KEY"):
+                raise ValueError("OpenAI API key not found in environment")
+
+            self.client=OpenAI()
 
         except Exception as e:
-            logger.error("Error loading LLM")
+            logger.error("Error initializing OpenAI client")
             raise CustomException(e,sys)
         
-
-    def generate(self,query,context):
+    
+    def generate(self, query, context):
         try:
-            logger.info("Generating answer")
+            logger.info("Generating answer using OpenAI")
 
-            prompt = f"""
-You are a strict question-answering system.
+            response=self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        'role':'system',
+                        'content':"""
+You are an expert assistant.
 
-Rules:
-- Answer ONLY using the given context
-- Give a COMPLETE and CORRECT answer
-- Do NOT copy random sentences
-- If definition is asked → give proper definition
-- Keep answer clear and meaningful (3–5 lines)
+- Answer clearly and directly
+- Do NOT mention the word "context"
+- Start with a direct definition for "what is" questions
+- If the answer is partially available, infer and complete it naturally
+- Keep answers concise (2–4 lines)
+"""
+                    },
+
+                    {
+                        'role':'user',
+                        "content": f"""
+Answer the question using the information below.
 
 Context:
 {context}
@@ -50,15 +69,13 @@ Question:
 
 Answer:
 """
-            prompt = prompt[:1500]
-            response=self.generator(
-                prompt,
-                max_length=self.max_length,
-                do_sample=False
+                    }
+                ],
+                temperature=self.temp
             )
 
-            return response[0]['generated_text']
+            return response.choices[0].message.content
         
         except Exception as e:
-            logger.error("Error generating response")
+            logger.error("Error generating answer")
             raise CustomException(e,sys)

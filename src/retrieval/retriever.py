@@ -57,7 +57,7 @@ class Retriever:
             raise CustomException(e,sys)
         
     
-    def retrieve(self,query, top_k=3):
+    def retrieve(self,query, top_k=5):
         try:
             logger.info(f"Retrieving for query: {query}")
 
@@ -68,7 +68,7 @@ class Retriever:
 
             logger.info(f"Initial retrieved chunks: {len(retrieved_chunks)}")
 
-            pairs=[(query,chunk) for chunk in retrieved_chunks]
+            pairs=[(f"Explain: {query}", chunk) for chunk in retrieved_chunks]
             scores=self.reranker.predict(pairs)
 
             ranked_chunks=[
@@ -78,6 +78,8 @@ class Retriever:
                     reverse=True
                 )
             ]
+
+            ranked_chunks = list(dict.fromkeys(ranked_chunks))
 
             filtered_chunks=[
                 chunk for chunk in ranked_chunks

@@ -3,28 +3,17 @@ from src.generation.generation import Generator
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
 import sys
-import yaml
 
 logger=get_logger(__name__)
-
-def load_config(path="config.yaml"):
-    with open(path, 'r') as f:
-        return yaml.safe_load(f)
 
 class RAGPipeline:
     def __init__(self):
         try:
             logger.info("Initializing RAG Pipeline")
 
-            config=load_config()
-
             self.retriever=Retriever()
 
-            gen_config=config['generation']
-            self.generator=Generator(
-                model_name=gen_config['model_name'],
-                max_length=gen_config.get('max_length', 200)
-            )
+            self.generator=Generator()
 
         except Exception as e:
             logger.error("Error initializing RAG pipeline")
@@ -35,8 +24,12 @@ class RAGPipeline:
         try:
             logger.info(f"Running RAG pipeline for query: {query}")
 
-            retrieved_chunks=self.retriever.retrieve(query, top_k=3)
+            retrieved_chunks=self.retriever.retrieve(query, top_k=5)
             retrieved_chunks = [chunk for chunk in retrieved_chunks if len(chunk) > 50]
+            #Debug
+            print("\n--- Retrieved Chunks ---\n")
+            for i, chunk in enumerate(retrieved_chunks):
+                print(f"[{i}] {chunk[:300]}\n")
 
             clean_chunks=[
                 " ".join(chunk.replace("\n", " ").split())[:400]
@@ -46,11 +39,11 @@ class RAGPipeline:
             logger.info(f"Retrieved {len(clean_chunks)} valid chunks")
 
             context = ""
-            for chunk in clean_chunks[:2]:
-                if len(context.split()) < 300:
-                    context += chunk + "\n\n"
-                else:
-                    break
+            for chunk in clean_chunks[:3]:
+                context+=chunk+"\n\n"
+            
+            context=" ".join(context.split()[:400])
+
             logger.info(f"Context length: {len(context)}")
 
             ans=self.generator.generate(query,context)
