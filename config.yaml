@@ -6,7 +6,7 @@ data:
   input_path: "data/raw/"
 
 embedding:
-  model_name: all-MiniLM-L6-v2
+  model_name: BAAI/bge-base-en
 
 
 generation:

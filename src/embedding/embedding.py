@@ -5,7 +5,6 @@ import sys
 
 logger=get_logger(__name__)
 
-# Dimension = 384 (for MiniLM)
 class EmbeddingModel:
     def __init__(self, model_name):
         try:
@@ -20,7 +19,11 @@ class EmbeddingModel:
     def encode(self, texts):
         try:
             logger.info(f"Generating embeddings for {len(texts)} chunks")
-            embeddings=self.model.encode(texts, show_progress_bar=True)
+            texts=[f"passage: {t}" for t in texts]
+            embeddings=self.model.encode(
+                texts,
+                normalize_embeddings=True
+            )
             return embeddings
 
         except Exception as e:

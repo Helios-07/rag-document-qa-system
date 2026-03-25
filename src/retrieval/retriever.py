@@ -61,7 +61,7 @@ class Retriever:
         try:
             logger.info(f"Retrieving for query: {query}")
 
-            query_embedding=self.embedding_model.encode([query])[0]
+            query_embedding=self.embedding_model.encode([f"query: {query}"])[0]
             distances,indices=self.vector_store.search(query_embedding, self.top_k)
 
             retrieved_chunks=[self.chunks[i] for i in indices[0]]

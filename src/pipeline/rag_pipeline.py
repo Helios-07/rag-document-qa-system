@@ -26,11 +26,7 @@ class RAGPipeline:
 
             retrieved_chunks=self.retriever.retrieve(query, top_k=5)
             retrieved_chunks = [chunk for chunk in retrieved_chunks if len(chunk) > 50]
-            #Debug
-            print("\n--- Retrieved Chunks ---\n")
-            for i, chunk in enumerate(retrieved_chunks):
-                print(f"[{i}] {chunk[:300]}\n")
-
+         
             clean_chunks=[
                 " ".join(chunk.replace("\n", " ").split())[:400]
                 for chunk in retrieved_chunks
