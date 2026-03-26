@@ -84,6 +84,7 @@ Answer:
                 if chunk.choices[0].delta.content is not None:
                     token=chunk.choices[0].delta.content
                     print(token, end="", flush=True)
+                    full_response += token
             
             print("\n")
 

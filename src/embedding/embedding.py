@@ -19,6 +19,8 @@ class EmbeddingModel:
     def encode(self, texts):
         try:
             logger.info(f"Generating embeddings for {len(texts)} chunks")
+            if not texts:
+                return []
             texts=[f"passage: {t}" for t in texts]
             embeddings=self.model.encode(
                 texts,

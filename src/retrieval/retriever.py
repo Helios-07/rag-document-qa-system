@@ -43,7 +43,7 @@ class Retriever:
 
             retrieval_config=config['retrieval']
 
-            self.top_k=retrieval_config.get("top_k", 3)
+            self.top_k=retrieval_config.get("top_k", 5)
             reranker_model=retrieval_config.get(
                 'reranker_model',
                 "cross-encoder/ms-marco-MiniLM-L-6-v2"
@@ -68,7 +68,7 @@ class Retriever:
 
             logger.info(f"Initial retrieved chunks: {len(retrieved_chunks)}")
 
-            pairs=[(f"Explain: {query}", chunk) for chunk in retrieved_chunks]
+            pairs=[(query, chunk) for chunk in retrieved_chunks]
             scores=self.reranker.predict(pairs)
 
             ranked_chunks=[

@@ -60,7 +60,7 @@ def chunk_text(text: str, chunk_size: int, overlap: int):
                 for s in reversed(curr_chunk):
                     temp_len+=len(s.split())
                     overlap_chunk.insert(0,s)
-                    if temp_len<=overlap:
+                    if temp_len>=overlap:
                         break
 
                 curr_chunk=overlap_chunk
