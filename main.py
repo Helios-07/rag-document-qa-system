@@ -20,10 +20,8 @@ def main():
 
             logger.info(f"User query: {query}")
 
-            ans=pipeline.run(query)
+            pipeline.run(query)
 
-            print("\n Answer:\n")
-            print(ans)
 
     except Exception as e:
         logger.error("Application Failed")

@@ -71,10 +71,23 @@ Answer:
 """
                     }
                 ],
-                temperature=self.temp
+                temperature=self.temp,
+                stream=True
             )
 
-            return response.choices[0].message.content
+            full_response=""
+
+
+            print("\n Answer:\n")
+
+            for chunk in response:
+                if chunk.choices[0].delta.content is not None:
+                    token=chunk.choices[0].delta.content
+                    print(token, end="", flush=True)
+            
+            print("\n")
+
+            return full_response
         
         except Exception as e:
             logger.error("Error generating answer")
