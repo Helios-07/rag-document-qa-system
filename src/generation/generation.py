@@ -36,7 +36,7 @@ class Generator:
             raise CustomException(e,sys)
         
     
-    def generate(self, query, context):
+    def generate(self, query, context, history=""):
         try:
             logger.info("Generating answer using OpenAI")
 
@@ -60,6 +60,9 @@ You are an expert assistant.
                         'role':'user',
                         "content": f"""
 Answer the question using the information below.
+
+Previous Conversation:
+{history}
 
 Context:
 {context}

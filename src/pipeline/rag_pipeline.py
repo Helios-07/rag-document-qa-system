@@ -11,6 +11,8 @@ class RAGPipeline:
         try:
             logger.info("Initializing RAG Pipeline")
 
+            self.chat_history=[]
+
             self.retriever=Retriever()
 
             self.generator=Generator()
@@ -42,7 +44,14 @@ class RAGPipeline:
 
             logger.info(f"Context length: {len(context)}")
 
-            ans=self.generator.generate(query,context)
+            his_text=""
+
+            for q,ans in self.chat_history[-3:]:
+                his_text+=f"User: {q}\nAssistant: {ans}\n\n"
+
+            ans=self.generator.generate(query,context,his_text)
+
+            self.chat_history.append((query,ans.strip()))
 
             return ans
         
