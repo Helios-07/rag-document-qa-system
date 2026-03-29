@@ -9,3 +9,4 @@ boto3
 nltk
 transformers==4.40.0
 openai
+streamlit
