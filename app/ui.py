@@ -7,6 +7,12 @@ st.set_page_config(
     layout="wide"
 )
 
+if "messages" not in st.session_state:
+    st.session_state.messages=[]
+
+if "uploaded_files" not in st.session_state:
+    st.session_state.uploaded_files=[]
+
 st.markdown("""
 <style>
 .chat-container {
@@ -35,16 +41,43 @@ st.markdown("""
 st.title("🤖 RAG Chatbot")
 st.caption("Ask questions from your documents")
 
+
 with st.sidebar:
     st.header("⚙️ Settings")
     st.write("Model: OpenAI")
     st.write("Retriever: FAISS + reranker")
 
+    upload_file=st.file_uploader(
+        "📄 Upload Document",
+        type=['pdf','txt']
+    )
+    
+    
+
+    
+    if upload_file is not None:
+        if upload_file.name not in st.session_state.uploaded_files:
+            with st.spinner("📄 Processing document..."):
+                response=requests.post("http://127.0.0.1:8000/upload", files={"file":(upload_file.name, upload_file.getvalue())})
+
+                if response.status_code==200:
+                    st.session_state.uploaded_files.append(upload_file.name)
+                    st.success(f"✅ {upload_file.name} uploaded successfully!")
+                else:
+                    st.error("❌ Failed to process document")
+
+    if st.session_state.uploaded_files:
+        st.markdown("### 📂 Uploaded Files")
+        for file in st.session_state.uploaded_files:
+            st.write(f"📄 {file}")
+
+    
     if st.button("🗑️ Clear Chat"):
         st.session_state.messages=[]
 
-if "messages" not in st.session_state:
-    st.session_state.messages=[]
+    if st.button("🧹 Clear Uploaded Files"):
+        st.session_state.uploaded_files=[]
+        st.success("Uploaded files cleared")
 
 st.markdown('<div class="chat-container">', unsafe_allow_html=True)
 

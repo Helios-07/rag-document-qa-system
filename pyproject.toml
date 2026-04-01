@@ -13,6 +13,7 @@ dependencies = [
     "openai>=2.29.0",
     "pymupdf>=1.27.2.2",
     "pypdf2>=3.0.1",
+    "python-multipart>=0.0.22",
     "pyyaml>=6.0.3",
     "sentence-transformers==2.6.1",
     "streamlit>=1.55.0",

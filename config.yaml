@@ -17,3 +17,8 @@ generation:
 retrieval:
   top_k: 5
   reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2
+
+
+paths:
+  faiss_index: "artifacts/faiss_index/index.faiss"
+  chunks: "artifacts/chunks.pkl"
