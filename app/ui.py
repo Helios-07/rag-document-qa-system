@@ -62,16 +62,17 @@ if query:
     st.session_state.messages.append({'role':'user', 'content':query})
 
     with st.spinner("Thinking..."):
-        response=requests.post("http://127.0.0.1:8000/ask", json={"query": query}, stream=True)
+        response=requests.post("http://127.0.0.1:8000/ask-stream", json={"query": query}, stream=True)
     
     full_response=""
     placeholder=st.empty()
 
-    for chunk in response.iter_content(chunk_size=20):
+    for chunk in response.iter_content(chunk_size=None):
         if chunk:
             text=chunk.decode('utf-8')
             full_response+=text
 
             placeholder.markdown(f"<div class='bot-msg'>{full_response}</div>", unsafe_allow_html=True)    
+    
     st.session_state.messages.append({'role':'assistant', 'content':full_response})
 

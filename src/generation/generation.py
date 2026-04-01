@@ -78,20 +78,9 @@ Answer:
                 stream=True
             )
 
-            full_response=""
-
-
-            print("\n Answer:\n")
-
             for chunk in response:
-                if chunk.choices[0].delta.content is not None:
-                    token=chunk.choices[0].delta.content
-                    print(token, end="", flush=True)
-                    full_response += token
-            
-            print("\n")
-
-            return full_response
+                if chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
         
         except Exception as e:
             logger.error("Error generating answer")

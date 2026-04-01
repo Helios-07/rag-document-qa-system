@@ -49,11 +49,13 @@ class RAGPipeline:
             for q,ans in self.chat_history[-3:]:
                 his_text+=f"User: {q}\nAssistant: {ans}\n\n"
 
-            ans=self.generator.generate(query,context,his_text)
+            full_response=""
 
-            self.chat_history.append((query,ans.strip()))
+            for token in self.generator.generate(query,context, his_text):
+                full_response+=token
+                yield token
 
-            return ans
+            self.chat_history.append((query, full_response.strip()))
         
         except Exception as e:
             logger.error("Error in RAG pipeline")
