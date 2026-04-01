@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  api:
+    image: helios07/rag-api:latest
+    container_name: rag_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+
+  ui:
+    image: helios07/rag-ui:latest
+    container_name: rag_ui
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    environment:
+      - API_URL=http://api:8000

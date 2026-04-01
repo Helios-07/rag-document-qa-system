@@ -1,0 +1,41 @@
+__pycache__/
+*.pyc
+*.pyo
+
+.venv/
+venv/
+env/
+
+logs/
+*.log
+
+# artifacts/
+# *.faiss
+# *.pkl
+
+.git/
+.gitignore
+
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+.env
+.env.local
+
+temp_*.pdf
+*.tmp
+
+__pycache__/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+uv.lock
+
+data/raw/

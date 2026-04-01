@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from pydantic import BaseModel
-from streamlit import config
 from src.ingestion.loader import load_document
 from src.ingestion.chunker import chunk_text
 from src.embedding.embedding import EmbeddingModel
@@ -78,6 +77,8 @@ def upload_file(file:UploadFile=File(...)):
             vector_store=FAISSVectorStore(dimension)
 
         vector_store.add_embeddings(embeddings)
+
+        os.makedirs(os.path.dirname(faiss_path), exist_ok=True)
         vector_store.save()
 
 
@@ -100,4 +101,9 @@ def upload_file(file:UploadFile=File(...)):
         return {"message": "File processed successfully"}
     
     except Exception as e:
+        import traceback
+
+        print("UPLOAD ERROR:")
+        print(traceback.format_exc())   
+        logger.error(f"UPLOAD ERROR: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

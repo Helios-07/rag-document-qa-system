@@ -1,5 +1,8 @@
 import streamlit as st
 import requests
+import os
+
+BASE_URL=os.getenv("API_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(
     page_title="RAG Chatbot",
@@ -58,7 +61,7 @@ with st.sidebar:
     if upload_file is not None:
         if upload_file.name not in st.session_state.uploaded_files:
             with st.spinner("📄 Processing document..."):
-                response=requests.post("http://127.0.0.1:8000/upload", files={"file":(upload_file.name, upload_file.getvalue())})
+                response=requests.post(f"{BASE_URL}/upload", files={"file":(upload_file.name, upload_file.getvalue())})
 
                 if response.status_code==200:
                     st.session_state.uploaded_files.append(upload_file.name)
@@ -95,7 +98,7 @@ if query:
     st.session_state.messages.append({'role':'user', 'content':query})
 
     with st.spinner("Thinking..."):
-        response=requests.post("http://127.0.0.1:8000/ask-stream", json={"query": query}, stream=True)
+        response=requests.post(f"{BASE_URL}/ask-stream", json={"query": query}, stream=True)
     
     full_response=""
     placeholder=st.empty()

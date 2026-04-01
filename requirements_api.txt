@@ -1,0 +1,15 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
+fastapi
+uvicorn
+PyMuPDF
+faiss-cpu
+sentence-transformers==2.6.1
+pyyaml
+boto3
+nltk
+transformers==4.40.0
+openai
+python-multipart
+python-dotenv
+numpy<2.0
