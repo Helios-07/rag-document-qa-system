@@ -105,6 +105,8 @@ def main():
         logger.error("Pipeline execution failed")
         raise CustomException(e, sys)
 
+def run_ingestion():
+    main()
 
 if __name__ == "__main__":
     main()

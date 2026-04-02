@@ -1,8 +1,10 @@
 from src.retrieval.retriever import Retriever
 from src.generation.generation import Generator
+from src.pipeline.ingest import run_ingestion
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
 import sys
+import os
 
 logger=get_logger(__name__)
 
@@ -12,6 +14,10 @@ class RAGPipeline:
             logger.info("Initializing RAG Pipeline")
 
             self.chat_history=[]
+
+            if not os.path.exists("artifacts/chunks.pkl"):
+                logger.info("Artifacts not found. Running ingestion...")
+                run_ingestion()
 
             self.retriever=Retriever()
 
