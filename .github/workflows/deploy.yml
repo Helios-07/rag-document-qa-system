@@ -20,11 +20,11 @@ jobs:
 
       # Build API image
       - name: Build API Image
-        run: docker build -t helios07/rag-api ./api
+        run: docker build -t helios07/rag-api -f docker/Dockerfile.api .
 
       # Build UI image
       - name: Build UI Image
-        run: docker build -t helios07/rag-ui ./ui
+        run: docker build -t helios07/rag-ui -f docker/Dockerfile.ui .
 
       # Push images
       - name: Push Images
