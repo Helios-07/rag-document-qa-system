@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY requirements_api.txt .
 
-COPY artifacts/ artifacts/
+# COPY artifacts/ artifacts/
 
 RUN pip install --no-cache-dir -r requirements_api.txt
 
