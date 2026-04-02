@@ -28,6 +28,10 @@ class QueryRequest(BaseModel):
 def home():
     return {"message":"RAG API is running"}
 
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 @app.post("/ask-stream")
 def stream(request: QueryRequest):
     try:
