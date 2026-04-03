@@ -4,6 +4,7 @@ from src.ingestion.loader import load_document
 from src.ingestion.chunker import chunk_text
 from src.embedding.embedding import EmbeddingModel
 from src.vector_store.faiss_store import FAISSVectorStore
+from src.retrieval.retriever import Retriever
 from src.pipeline.rag_pipeline import RAGPipeline
 from src.utils.logger import get_logger
 from fastapi.responses import StreamingResponse
@@ -102,6 +103,8 @@ def upload_file(file:UploadFile=File(...)):
         with open(chunks_path, 'wb') as f:
             pickle.dump(all_chunks,f)
         logger.info(f"Total chunks stored: {len(all_chunks)}")
+
+        pipeline.retriever=Retriever()
         return {"message": "File processed successfully"}
     
     except Exception as e:

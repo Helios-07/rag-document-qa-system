@@ -15,11 +15,11 @@ class RAGPipeline:
 
             self.chat_history=[]
 
-            if not os.path.exists("artifacts/chunks.pkl"):
-                logger.info("Artifacts not found. Running ingestion...")
-                run_ingestion()
-
-            self.retriever=Retriever()
+            if os.path.exists("artifacts/chunks.pkl"):
+                self.retriever=Retriever()
+            else:
+                logger.warning("No artifacts found. Retriever not initialized")
+                self.retriever=None
 
             self.generator=Generator()
 
@@ -30,6 +30,10 @@ class RAGPipeline:
     
     def run(self,query):
         try:
+            if self.retriever is None:
+                yield "No documents uploaded yet. Please upload a file first"
+                return
+
             logger.info(f"Running RAG pipeline for query: {query}")
 
             retrieved_chunks=self.retriever.retrieve(query, top_k=5)
