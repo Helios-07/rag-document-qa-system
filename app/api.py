@@ -47,6 +47,7 @@ def stream(request: QueryRequest):
         raise HTTPException(status_code=500, detail=str(e))
     
 
+
 @app.post("/upload")
 def upload_file(file:UploadFile=File(...)):
     try:
