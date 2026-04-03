@@ -1,7 +1,10 @@
 [project]
 name = "rag-project"
 version = "0.1.0"
-description = "Add your description here"
+description = "Intelligent Document Q&A System powered by FastAPI and Streamlit"
+authors = [
+    { name = "Aman Nautiyal", email = "amannautiyal794@gmail.com" }
+]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
